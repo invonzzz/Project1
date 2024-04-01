@@ -42,6 +42,7 @@ namespace InvForm {
 				if (Convert::ToInt32(str4) == 1) dataGridView1->Rows[count]->DefaultCellStyle->BackColor = Color::Red;
 				count++;
 			}
+			din->Close();
 
 
 		}
@@ -58,6 +59,7 @@ namespace InvForm {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Column1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Column2;
 	private: System::Windows::Forms::Button^ button3;
+	private: System::Windows::Forms::Button^ button4;
 
 	public:
 
@@ -73,7 +75,7 @@ namespace InvForm {
 		/// </summary>
 		~MyForm()
 		{
-
+			
 			if (components)
 			{
 
@@ -102,6 +104,7 @@ namespace InvForm {
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
 			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->button4 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -178,11 +181,22 @@ namespace InvForm {
 			this->button3->UseVisualStyleBackColor = true;
 			this->button3->Click += gcnew System::EventHandler(this, &MyForm::button3_Click);
 			// 
+			// button4
+			// 
+			this->button4->Location = System::Drawing::Point(627, 433);
+			this->button4->Name = L"button4";
+			this->button4->Size = System::Drawing::Size(75, 23);
+			this->button4->TabIndex = 6;
+			this->button4->Text = L"button4";
+			this->button4->UseVisualStyleBackColor = true;
+			this->button4->Click += gcnew System::EventHandler(this, &MyForm::button4_Click);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1017, 533);
+			this->Controls->Add(this->button4);
 			this->Controls->Add(this->button3);
 			this->Controls->Add(this->textBox2);
 			this->Controls->Add(this->textBox1);
@@ -212,6 +226,23 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
 	int a = dataGridView1->CurrentRow->Index;
 	dataGridView1->Rows[a]->DefaultCellStyle->BackColor = Color::Green;
+}
+private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
+	String^ fileName = "db.txt";
+
+	StreamWriter^ sw = gcnew StreamWriter(fileName);
+	for (int i = 0; i < this->dataGridView1->Rows->Count; i++)
+	{
+		sw->WriteLine(dataGridView1->Rows[i]->Cells[0]->Value);
+		sw->WriteLine(dataGridView1->Rows[i]->Cells[1]->Value);
+		if (this->dataGridView1->Rows[i]->DefaultCellStyle->BackColor == Color::Green)sw->WriteLine(Convert::ToInt32(1));
+		else sw->WriteLine(Convert::ToInt32(0));
+		if (this->dataGridView1->Rows[i]->DefaultCellStyle->BackColor == Color::Red)sw->WriteLine(Convert::ToInt32(1));
+		else sw->WriteLine(Convert::ToInt32(0));
+
+	}
+
+	sw->Close();
 }
 };
 }
