@@ -20,6 +20,8 @@ namespace InvForm {
 	public:
 		MyForm(void)
 		{
+			int cDay = 1;
+			int cMonth = 4;
 			InitializeComponent();
 			String^ fileName = "db.txt";
 
@@ -36,10 +38,18 @@ namespace InvForm {
 				str2 = din->ReadLine();
 				str3 = din->ReadLine();
 				str4 = din->ReadLine();
+				String^ tmp = str2;
 				
 				this->dataGridView1->Rows->Add(str1, str2);
 				if (Convert::ToInt32(str3) == 1) dataGridView1->Rows[count]->DefaultCellStyle->BackColor = Color::Green;
 				if (Convert::ToInt32(str4) == 1) dataGridView1->Rows[count]->DefaultCellStyle->BackColor = Color::Red;
+				String^ day = "" + tmp[0] + tmp[1];
+				String^ month = "" + tmp[3] + tmp[4];
+				if (cMonth > Convert::ToInt32(month)) dataGridView1->Rows[count]->DefaultCellStyle->BackColor = Color::Red;
+				else
+				{
+					if (cDay > Convert::ToInt32(day)) dataGridView1->Rows[count]->DefaultCellStyle->BackColor = Color::Red;
+				}
 				count++;
 			}
 			din->Close();
@@ -60,6 +70,8 @@ namespace InvForm {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Column2;
 	private: System::Windows::Forms::Button^ button3;
 	private: System::Windows::Forms::Button^ button4;
+	private: System::Windows::Forms::Label^ label1;
+	private: System::Windows::Forms::Label^ label2;
 
 	public:
 
@@ -105,6 +117,8 @@ namespace InvForm {
 			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->button4 = (gcnew System::Windows::Forms::Button());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->label2 = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -183,19 +197,39 @@ namespace InvForm {
 			// 
 			// button4
 			// 
-			this->button4->Location = System::Drawing::Point(627, 433);
+			this->button4->Location = System::Drawing::Point(420, 468);
 			this->button4->Name = L"button4";
-			this->button4->Size = System::Drawing::Size(75, 23);
+			this->button4->Size = System::Drawing::Size(112, 23);
 			this->button4->TabIndex = 6;
-			this->button4->Text = L"button4";
+			this->button4->Text = L"Сохранить";
 			this->button4->UseVisualStyleBackColor = true;
 			this->button4->Click += gcnew System::EventHandler(this, &MyForm::button4_Click);
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Location = System::Drawing::Point(30, 434);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(33, 16);
+			this->label1->TabIndex = 7;
+			this->label1->Text = L"Имя";
+			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Location = System::Drawing::Point(42, 475);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(39, 16);
+			this->label2->TabIndex = 8;
+			this->label2->Text = L"Дата";
 			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1017, 533);
+			this->ClientSize = System::Drawing::Size(1017, 503);
+			this->Controls->Add(this->label2);
+			this->Controls->Add(this->label1);
 			this->Controls->Add(this->button4);
 			this->Controls->Add(this->button3);
 			this->Controls->Add(this->textBox2);
@@ -231,14 +265,18 @@ private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e
 	String^ fileName = "db.txt";
 
 	StreamWriter^ sw = gcnew StreamWriter(fileName);
-	for (int i = 0; i < this->dataGridView1->Rows->Count; i++)
+	for (int i = 0; i < this->dataGridView1->Rows->Count-1; i++)
 	{
-		sw->WriteLine(dataGridView1->Rows[i]->Cells[0]->Value);
-		sw->WriteLine(dataGridView1->Rows[i]->Cells[1]->Value);
-		if (this->dataGridView1->Rows[i]->DefaultCellStyle->BackColor == Color::Green)sw->WriteLine(Convert::ToInt32(1));
-		else sw->WriteLine(Convert::ToInt32(0));
-		if (this->dataGridView1->Rows[i]->DefaultCellStyle->BackColor == Color::Red)sw->WriteLine(Convert::ToInt32(1));
-		else sw->WriteLine(Convert::ToInt32(0));
+		if (dataGridView1->Rows[i]->Cells[0]->Value != "" || dataGridView1->Rows[i]->Cells[0]->Value != " ")
+		{
+			sw->WriteLine(dataGridView1->Rows[i]->Cells[0]->Value);
+			sw->WriteLine(dataGridView1->Rows[i]->Cells[1]->Value);
+			if (this->dataGridView1->Rows[i]->DefaultCellStyle->BackColor == Color::Green)sw->WriteLine(Convert::ToInt32(1));
+			else sw->WriteLine(Convert::ToInt32(0));
+			if (this->dataGridView1->Rows[i]->DefaultCellStyle->BackColor == Color::Red)sw->WriteLine(Convert::ToInt32(1));
+			else sw->WriteLine(Convert::ToInt32(0));
+		}
+		
 
 	}
 
