@@ -1,4 +1,3 @@
-#include "Header.h"
 #pragma once
 
 namespace InvForm {
@@ -9,6 +8,7 @@ namespace InvForm {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::IO;
 
 	/// <summary>
 	/// Сводка для MyForm
