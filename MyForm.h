@@ -20,8 +20,9 @@ namespace InvForm {
 	public:
 		MyForm(void)
 		{
-			int cDay = 1;
-			int cMonth = 4;
+			DateTime now = DateTime::Now;
+			int cDay = now.Day;
+			int cMonth = now.Month;
 			InitializeComponent();
 			String^ fileName = "db.txt";
 
@@ -66,12 +67,17 @@ namespace InvForm {
 
 	private: System::Windows::Forms::TextBox^ textBox1;
 	private: System::Windows::Forms::TextBox^ textBox2;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Column1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Column2;
+
+
 	private: System::Windows::Forms::Button^ button3;
 	private: System::Windows::Forms::Button^ button4;
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::Label^ label2;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Column1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Column2;
+	private: System::Windows::Forms::Label^ label3;
+	private: System::Windows::Forms::TextBox^ textBox3;
+	private: System::Windows::Forms::Label^ label4;
 
 	public:
 
@@ -119,11 +125,15 @@ namespace InvForm {
 			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->label3 = (gcnew System::Windows::Forms::Label());
+			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
+			this->label4 = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// dataGridView1
 			// 
+			this->dataGridView1->AllowUserToAddRows = false;
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {
 				this->Column1,
@@ -142,6 +152,7 @@ namespace InvForm {
 			this->Column1->HeaderText = L"Имя";
 			this->Column1->MinimumWidth = 6;
 			this->Column1->Name = L"Column1";
+			this->Column1->ReadOnly = true;
 			this->Column1->Width = 550;
 			// 
 			// Column2
@@ -149,13 +160,14 @@ namespace InvForm {
 			this->Column2->HeaderText = L"Дата";
 			this->Column2->MinimumWidth = 6;
 			this->Column2->Name = L"Column2";
+			this->Column2->ReadOnly = true;
 			this->Column2->Width = 125;
 			// 
 			// button1
 			// 
 			this->button1->Location = System::Drawing::Point(473, 405);
 			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(75, 23);
+			this->button1->Size = System::Drawing::Size(109, 23);
 			this->button1->TabIndex = 1;
 			this->button1->Text = L"Удалить";
 			this->button1->UseVisualStyleBackColor = true;
@@ -163,9 +175,9 @@ namespace InvForm {
 			// 
 			// button2
 			// 
-			this->button2->Location = System::Drawing::Point(392, 405);
+			this->button2->Location = System::Drawing::Point(359, 405);
 			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(75, 23);
+			this->button2->Size = System::Drawing::Size(108, 23);
 			this->button2->TabIndex = 2;
 			this->button2->Text = L"Добавить";
 			this->button2->UseVisualStyleBackColor = true;
@@ -182,8 +194,10 @@ namespace InvForm {
 			// 
 			this->textBox2->Location = System::Drawing::Point(96, 468);
 			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(155, 22);
+			this->textBox2->Size = System::Drawing::Size(27, 22);
 			this->textBox2->TabIndex = 4;
+			this->textBox2->TextChanged += gcnew System::EventHandler(this, &MyForm::textBox2_TextChanged);
+			this->textBox2->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MyForm::textBox2_KeyPress);
 			// 
 			// button3
 			// 
@@ -223,11 +237,40 @@ namespace InvForm {
 			this->label2->TabIndex = 8;
 			this->label2->Text = L"Дата";
 			// 
+			// label3
+			// 
+			this->label3->AutoSize = true;
+			this->label3->Location = System::Drawing::Point(129, 474);
+			this->label3->Name = L"label3";
+			this->label3->Size = System::Drawing::Size(10, 16);
+			this->label3->TabIndex = 9;
+			this->label3->Text = L".";
+			// 
+			// textBox3
+			// 
+			this->textBox3->Location = System::Drawing::Point(145, 468);
+			this->textBox3->Name = L"textBox3";
+			this->textBox3->Size = System::Drawing::Size(27, 22);
+			this->textBox3->TabIndex = 10;
+			// 
+			// label4
+			// 
+			this->label4->AutoSize = true;
+			this->label4->Location = System::Drawing::Point(178, 475);
+			this->label4->Name = L"label4";
+			this->label4->Size = System::Drawing::Size(41, 16);
+			this->label4->TabIndex = 11;
+			this->label4->Text = L". 2024";
+			this->label4->Click += gcnew System::EventHandler(this, &MyForm::label4_Click);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1017, 503);
+			this->Controls->Add(this->label4);
+			this->Controls->Add(this->textBox3);
+			this->Controls->Add(this->label3);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->button4);
@@ -238,7 +281,7 @@ namespace InvForm {
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->dataGridView1);
 			this->Name = L"MyForm";
-			this->Text = L"MyForm";
+			this->Text = L"Планировщик";
 			this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
 			this->ResumeLayout(false);
@@ -249,23 +292,60 @@ namespace InvForm {
 	private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-		int a = dataGridView1->CurrentRow->Index;
-		dataGridView1->Rows->Remove(dataGridView1->Rows[a]);
+		int a = 0;
+		if (this->dataGridView1->Rows->Count > 0)
+		{
+			a = dataGridView1->CurrentRow->Index;
+			dataGridView1->Rows->Remove(dataGridView1->Rows[a]);
+		}
 	}
 private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
-	String^ name = this->textBox1->Text;
-	String^ data = this->textBox2->Text;
-	this->dataGridView1->Rows->Add(name, data);
+	if (this->textBox1->Text == "" || this->textBox2->Text == "" || this->textBox3->Text == "")
+	{
+		MessageBox::Show(this, "Введённые данные некоректны", "Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+	}
+	if (Convert::ToInt32(this->textBox2->Text) > 31 || Convert::ToInt32(this->textBox3->Text) > 12 || Convert::ToInt32(this->textBox2->Text) == 0 || Convert::ToInt32(this->textBox3->Text) == 0)
+	{
+		MessageBox::Show(this, "Введённые данные некоректны", "Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+	}
+	else
+	{
+		DateTime now = DateTime::Now;
+		int cDay = now.Day;
+		int cMonth = now.Month;
+		String^ name = "";
+		String^ data = "";
+		if (this->textBox2->Text->Length == 1)
+		{
+			data += "0";
+		}
+		name += this->textBox1->Text;
+		data += this->textBox2->Text + ".";
+		if (this->textBox3->Text->Length == 1)
+		{
+			data += "0";
+		}
+		data += this->textBox3->Text + ".2024";
+		this->dataGridView1->Rows->Add(name, data);
+		if (cMonth > Convert::ToInt32(this->textBox3->Text))
+		{
+			dataGridView1->Rows[this->dataGridView1->Rows->Count - 1]->DefaultCellStyle->BackColor = Color::Red;
+		}
+		else
+		{
+			if (cDay > Convert::ToInt32(this->textBox2->Text)) dataGridView1->Rows[this->dataGridView1->Rows->Count - 1]->DefaultCellStyle->BackColor = Color::Red;
+		}
+	}
 }
 private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
 	int a = dataGridView1->CurrentRow->Index;
-	dataGridView1->Rows[a]->DefaultCellStyle->BackColor = Color::Green;
+	if(a >= 0)dataGridView1->Rows[a]->DefaultCellStyle->BackColor = Color::Green;
 }
 private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
 	String^ fileName = "db.txt";
 
 	StreamWriter^ sw = gcnew StreamWriter(fileName);
-	for (int i = 0; i < this->dataGridView1->Rows->Count-1; i++)
+	for (int i = 0; i < this->dataGridView1->Rows->Count; i++)
 	{
 		if (dataGridView1->Rows[i]->Cells[0]->Value != "" || dataGridView1->Rows[i]->Cells[0]->Value != " ")
 		{
@@ -276,11 +356,16 @@ private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e
 			if (this->dataGridView1->Rows[i]->DefaultCellStyle->BackColor == Color::Red)sw->WriteLine(Convert::ToInt32(1));
 			else sw->WriteLine(Convert::ToInt32(0));
 		}
-		
-
 	}
-
 	sw->Close();
+}
+private: System::Void label4_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void textBox2_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void textBox2_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e) {
+	if ((e->KeyChar < 48 || e->KeyChar > 57) && e->KeyChar != '\b')
+		e->Handled = true;
 }
 };
 }
