@@ -252,6 +252,7 @@ namespace InvForm {
 			this->textBox3->Name = L"textBox3";
 			this->textBox3->Size = System::Drawing::Size(27, 22);
 			this->textBox3->TabIndex = 10;
+			this->textBox3->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MyForm::textBox2_KeyPress);
 			// 
 			// label4
 			// 
@@ -363,9 +364,11 @@ private: System::Void label4_Click(System::Object^ sender, System::EventArgs^ e)
 }
 private: System::Void textBox2_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 }
-private: System::Void textBox2_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e) {
-	if ((e->KeyChar < 48 || e->KeyChar > 57) && e->KeyChar != '\b')
+private: System::Void textBox2_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e) 
+	{
+	TextBox^ text = safe_cast<TextBox^>(sender);
+	if (((e->KeyChar < 48 || e->KeyChar > 57) || text->Text->Length >= 2) && e->KeyChar != '\b')
 		e->Handled = true;
-}
+	}
 };
 }
